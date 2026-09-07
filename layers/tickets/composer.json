@@ -1,0 +1,18 @@
+{
+    "name": "tickets/domain",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Tickets\\": "src/",
+            "Tickets\\Database\\Factories\\": "src/Database/Factories/",
+            "Tickets\\Database\\Seeders\\": "src/Database/Seeders/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Tickets\\Providers\\TicketsServiceProvider"
+            ]
+        }
+    }
+}
