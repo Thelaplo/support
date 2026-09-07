@@ -1,0 +1,17 @@
+{
+    "cloud": false,
+    "guidelines": true,
+    "mcp": true,
+    "nightwatch": false,
+    "packages": [
+        "lomkit/laravel-access-control"
+    ],
+    "sail": true,
+    "skills": [
+        "infer-conventions",
+        "laravel-best-practices",
+        "testing-best-practices",
+        "tailwindcss-development",
+        "laravel-access-control"
+    ]
+}
