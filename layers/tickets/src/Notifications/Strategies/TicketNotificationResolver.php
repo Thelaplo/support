@@ -1,24 +1,25 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Tickets\Notifications\Strategies;
 
-use Tickets\Enums\TicketPriority;
+use Tickets\Models\Ticket;
 
 class TicketNotificationResolver
 {
-    protected array $strategies = [
-        TicketPriority::Low->value => StandardNotificationStrategy::class,
-        TicketPriority::Normal->value => StandardNotificationStrategy::class,
-        TicketPriority::High->value => CriticalNotificationStrategy::class,
-        TicketPriority::Critical->value => CriticalNotificationStrategy::class,
-    ];
-
-    public function resolve(TicketPriority $priority): TicketNotificationStrategy
+    public function resolve(Ticket|string|object $ticket): NotificationStrategyInterface
     {
-        $strategyClass = $this->strategies[$priority->value] ?? StandardNotificationStrategy::class;
+        $priority = 'normal';
 
-        return new $strategyClass();
+        if ($ticket instanceof Ticket) {
+            $priority = is_object($ticket->priority) ? $ticket->priority->value : $ticket->priority;
+        } elseif (is_string($ticket) || is_object($ticket)) {
+            $priority = is_object($ticket) && property_exists($ticket, 'value') ? $ticket->value : (string) $ticket;
+        }
+
+        if ($priority === 'critical') {
+            return new CriticalNotificationStrategy();
+        }
+
+        return new StandardNotificationStrategy();
     }
 }
