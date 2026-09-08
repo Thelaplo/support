@@ -1,0 +1,16 @@
+[90m= [39m[34;4mTickets\Models\Ticket[39;24m {#9060
+    [34mid[39m: [35m1[39m,
+    [34mrequester_id[39m: [35m7[39m,
+    [34mtechnician_id[39m: [36mnull[39m,
+    [34mtitle[39m: [32m"[39m[32mNam id nisi eget lorem vehicula eleifend.[39m[32m"[39m,
+    [34mdescription[39m: <<<[32mEOS[39m
+      [32mLorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eu nunc non mi aliquet varius. Curabitur et vestibulum nulla. Donec placerat tempor arcu, in viverra sapien laoreet eu. Sed vitae ligula eget mauris malesuada pretium in at lorem. Integer condimentum urna at lacus fermentum, nec sagittis purus venenatis.[39m
+      [32mAenean accumsan leo at odio vestibulum, non fermentum nisl varius. Suspendisse in quam sed ligula convallis sodales. Mauris consequat risus sit amet libero iaculis, quis volutpat eros scelerisque. Pellentesque habitants morbi tristique senectus et netus et malesuada fames ac turpis egestas.[39m
+      [32mEOS[39m,
+    [34mstatus[39m: [32m"[39m[32mopen[39m[32m"[39m,
+    [34mpriority[39m: [32m"[39m[32mcritical[39m[32m"[39m,
+    [34mresolved_at[39m: [36mnull[39m,
+    [34mcreated_at[39m: [32m"[39m[32m2026-09-08 02:14:55[39m[32m"[39m,
+    [34mupdated_at[39m: [32m"[39m[32m2026-09-08 12:15:07[39m[32m"[39m,
+    [34mdeleted_at[39m: [36mnull[39m,
+  }

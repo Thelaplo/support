@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'XEFI Support Desk' }}</title>
     
-    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,16 +14,9 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        xefi: {
-                            red: '#E2001A',
-                            darkred: '#B80015',
-                            black: '#111827',
-                            gray: '#1F2937'
-                        }
+                        xefi: { red: '#E2001A', darkred: '#B80015', black: '#111827', gray: '#1F2937' }
                     }
                 }
             }
@@ -33,12 +25,10 @@
     @livewireStyles
 </head>
 <body class="h-full font-sans text-slate-800 antialiased flex flex-col">
-    <!-- Header Corporate XEFI -->
     <header class="bg-xefi-black text-white border-b-4 border-xefi-red shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex justify-between items-center">
             <div class="flex items-center gap-8">
                 <a href="/tickets" class="flex items-center gap-3 group">
-                    <!-- Logo badge XEFI style -->
                     <span class="bg-xefi-red text-white font-extrabold px-3 py-1 rounded text-xl tracking-wider shadow">
                         XEFI
                     </span>
@@ -46,7 +36,6 @@
                         Support Desk
                     </span>
                 </a>
-                
                 <nav class="hidden md:flex items-center gap-1">
                     <a href="/tickets" class="px-3 py-2 rounded-md text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
                         Tableau de bord
@@ -64,23 +53,29 @@
                 </a>
 
                 @auth
-                    <div class="hidden sm:flex items-center gap-3 border-l border-slate-700 pl-4 text-xs">
-                        <span class="w-7 h-7 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center font-bold text-slate-300">
-                            {{ substr(auth()->user()->name, 0, 1) }}
-                        </span>
-                        <span class="text-slate-300 font-medium">{{ auth()->user()->name }}</span>
+                    <div class="hidden sm:flex items-center gap-4 border-l border-slate-700 pl-4 text-xs">
+                        <div class="flex items-center gap-3">
+                            <span class="w-7 h-7 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center font-bold text-slate-300">
+                                {{ substr(auth()->user()->name, 0, 1) }}
+                            </span>
+                            <span class="text-slate-300 font-medium">{{ auth()->user()->name }}</span>
+                        </div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-1.5 rounded transition">
+                                Déconnexion
+                            </button>
+                        </form>
                     </div>
                 @endauth
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {{ $slot }}
     </main>
 
-    <!-- Footer Corporate -->
     <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
         <div class="max-w-7xl mx-auto px-4">
             &copy; {{ date('Y') }} XEFI Informatique & Services — Plateforme Support & Assistance

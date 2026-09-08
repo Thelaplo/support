@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Tickets\Database\Factories\TicketFactory;
 use Tickets\Enums\TicketPriority;
 use Tickets\Enums\TicketStatus;
+use Tickets\Traits\HasHistory;
 
 /**
  * @property int $id
@@ -32,7 +33,7 @@ use Tickets\Enums\TicketStatus;
  */
 class Ticket extends Model
 {
-    use HasFactory, SoftDeletes, Prunable;
+    use HasFactory, SoftDeletes, Prunable,HasHistory;
 
     protected $fillable = [
         'requester_id',

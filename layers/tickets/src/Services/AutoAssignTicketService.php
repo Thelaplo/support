@@ -4,6 +4,8 @@ namespace Tickets\Services;
 
 use App\Models\User;
 use Tickets\Models\Ticket;
+use Tickets\Notifications\Strategies\TicketNotificationResolver;
+use Tickets\Events\TicketUpdatedEvent;
 
 class AutoAssignTicketService
 {
@@ -20,6 +22,7 @@ class AutoAssignTicketService
         if ($technician) {
             $ticket->technician_id = $technician->id;
             $ticket->status = 'assigned';
+            $ticket->save();
 
             // Ajouter le commentaire système après création
             Ticket::created(function (Ticket $createdTicket) use ($technician) {
@@ -30,6 +33,13 @@ class AutoAssignTicketService
                     ]);
                 }
             });
+
+            // Déclencher la stratégie de notification selon la priorité (Extension E3)
+            $strategy = (new TicketNotificationResolver())->resolve($ticket->priority);
+            $strategy->send($ticket);
+
+            // Diffuser l'événement en temps réel (Extension E5)
+            event(new TicketUpdatedEvent($ticket));
         }
     }
 }

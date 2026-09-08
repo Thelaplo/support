@@ -24,6 +24,7 @@ class TicketsServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 CheckSlaBreachesCommand::class,
+                \Tickets\Console\Commands\EscalateLateTicketsCommand::class,
             ]);
         }
     }
