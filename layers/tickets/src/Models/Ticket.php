@@ -3,7 +3,7 @@
 namespace Tickets\Models;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Prunable;
@@ -14,6 +14,22 @@ use Tickets\Database\Factories\TicketFactory;
 use Tickets\Enums\TicketPriority;
 use Tickets\Enums\TicketStatus;
 
+/**
+ * @property int $id
+ * @property int $requester_id
+ * @property int|null $technician_id
+ * @property string $title
+ * @property string|null $description
+ * @property TicketStatus|string $status
+ * @property TicketPriority|string $priority
+ * @property Carbon|null $resolved_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
+ * @property int|null $comments_count
+ * @property User $requester
+ * @property User|null $technician
+ */
 class Ticket extends Model
 {
     use HasFactory, SoftDeletes, Prunable;
@@ -37,7 +53,7 @@ class Ticket extends Model
         ];
     }
 
-    public function prunable(): Builder
+    public function prunable()
     {
         return static::where('deleted_at', '<=', now()->subDays(30));
     }
@@ -57,37 +73,55 @@ class Ticket extends Model
         return $this->hasMany(Comment::class);
     }
 
-    protected static function newFactory(): TicketFactory
+    public function attachments(): HasMany
     {
-        return TicketFactory::new();
+        return $this->hasMany(TicketAttachment::class);
     }
 
-    public function attachments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function getResolutionTimeInHours(): ?float
     {
-        return $this->hasMany(\Tickets\Models\TicketAttachment::class);
+        if (!$this->resolved_at) {
+            return null;
+        }
+
+        return (float) $this->created_at->diffInHours($this->resolved_at);
     }
 
     public function resolutionDurationInMinutes(): ?int
     {
-        if (!$this->resolved_at || !$this->created_at) {
+        if (!$this->resolved_at) {
             return null;
         }
-        return (int) abs($this->created_at->diffInMinutes($this->resolved_at));
+
+        return (int) $this->created_at->diffInMinutes($this->resolved_at);
+    }
+
+    public function getTargetSlaHours(): int
+    {
+        $priorityValue = is_object($this->priority) ? $this->priority->value : $this->priority;
+
+        return match ($priorityValue) {
+            'critical' => 4,
+            'high' => 8,
+            'normal' => 24,
+            'low' => 72,
+            default => 24,
+        };
     }
 
     public function isSlaBreached(): bool
     {
-        $slaLimitsInHours = [
-            'critical' => 4,
-            'high' => 24,
-            'normal' => 48,
-            'low' => 72,
-        ];
-        $priority = is_object($this->priority) ? $this->priority->value : (string) $this->priority;
-        $limitHours = $slaLimitsInHours[$priority] ?? 48;
-        $breachDeadline = $this->created_at->copy()->addHours($limitHours);
-        $referenceTime = $this->resolved_at ?? now();
-        return $referenceTime->isAfter($breachDeadline);
+        $limit = $this->created_at->copy()->addHours($this->getTargetSlaHours());
+
+        if ($this->resolved_at) {
+            return $this->resolved_at->greaterThan($limit);
+        }
+
+        return now()->greaterThan($limit);
+    }
+
+    protected static function newFactory(): TicketFactory
+    {
+        return TicketFactory::new();
     }
 }
-

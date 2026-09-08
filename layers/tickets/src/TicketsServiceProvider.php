@@ -2,11 +2,12 @@
 
 namespace Tickets;
 
+use App\Policies\TicketPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Tickets\Commands\CheckSlaBreachesCommand;
 use Tickets\Models\Ticket;
-use Tickets\Policies\TicketPolicy;
+use Tickets\Observers\TicketObserver;
 
 class TicketsServiceProvider extends ServiceProvider
 {
@@ -18,6 +19,7 @@ class TicketsServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(Ticket::class, TicketPolicy::class);
+        Ticket::observe(TicketObserver::class);
 
         if ($this->app->runningInConsole()) {
             $this->commands([

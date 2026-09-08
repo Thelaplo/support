@@ -29,7 +29,7 @@ class TicketFactory extends Factory
     public function assigned(?User $technician = null): static
     {
         return $this->state(fn (array $attributes) => [
-            'technician_id' => $technician?->id ?? User::factory(),
+            'technician_id' => $technician->id ?? User::factory(),
             'status' => TicketStatus::Assigned,
         ]);
     }

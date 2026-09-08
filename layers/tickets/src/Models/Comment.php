@@ -3,11 +3,22 @@
 namespace Tickets\Models;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Tickets\Database\Factories\CommentFactory;
 
+/**
+ * @property int $id
+ * @property int $ticket_id
+ * @property int $author_id
+ * @property string $body
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Ticket $ticket
+ * @property User $author
+ */
 class Comment extends Model
 {
     use HasFactory;

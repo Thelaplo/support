@@ -42,10 +42,12 @@ class TicketPdfExportTest extends TestCase
     public function test_un_intrus_ne_peut_pas_telecharger_le_rapport_pdf(): void
     {
         $requester = User::factory()->create();
+        $technician = User::factory()->create();
         $intruder = User::factory()->create();
 
         $ticket = Ticket::create([
             'requester_id' => $requester->id,
+            'technician_id' => $technician->id,
             'title' => 'Panne switch baie réseau',
             'description' => 'Voyants au rouge sur port uplink.',
             'status' => 'open',
