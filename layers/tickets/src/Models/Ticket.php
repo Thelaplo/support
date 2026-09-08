@@ -61,4 +61,33 @@ class Ticket extends Model
     {
         return TicketFactory::new();
     }
+
+    public function attachments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\Tickets\Models\TicketAttachment::class);
+    }
+
+    public function resolutionDurationInMinutes(): ?int
+    {
+        if (!$this->resolved_at || !$this->created_at) {
+            return null;
+        }
+        return (int) abs($this->created_at->diffInMinutes($this->resolved_at));
+    }
+
+    public function isSlaBreached(): bool
+    {
+        $slaLimitsInHours = [
+            'critical' => 4,
+            'high' => 24,
+            'normal' => 48,
+            'low' => 72,
+        ];
+        $priority = is_object($this->priority) ? $this->priority->value : (string) $this->priority;
+        $limitHours = $slaLimitsInHours[$priority] ?? 48;
+        $breachDeadline = $this->created_at->copy()->addHours($limitHours);
+        $referenceTime = $this->resolved_at ?? now();
+        return $referenceTime->isAfter($breachDeadline);
+    }
 }
+
