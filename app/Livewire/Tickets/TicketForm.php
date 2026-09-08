@@ -8,6 +8,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Tickets\Enums\TicketPriority;
+use Tickets\Events\TicketUpdatedBroadcastEvent;
 use Tickets\Models\Ticket;
 use Tickets\Rest\Actions\AssignTicketAction;
 
@@ -75,6 +76,9 @@ class TicketForm extends Component
             $this->reset('attachment');
         }
 
+        // Diffusion temps réel E5
+        TicketUpdatedBroadcastEvent::dispatch($this->ticket);
+
         session()->flash('success', __('tickets.saved_success'));
     }
 
@@ -89,6 +93,10 @@ class TicketForm extends Component
             $action->handle(['technician_id' => auth()->id()], collect([$this->ticket]));
 
             $this->ticket->refresh();
+
+            // Diffusion temps réel E5
+            TicketUpdatedBroadcastEvent::dispatch($this->ticket);
+
             session()->flash('success', __('tickets.assigned_success'));
         } catch (AccessDeniedHttpException $e) {
             $this->addError('transition', __('tickets.errors.transition_forbidden'));

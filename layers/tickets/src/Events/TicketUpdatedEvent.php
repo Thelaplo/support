@@ -25,6 +25,7 @@ class TicketUpdatedEvent implements ShouldBroadcast
         // Canal privé sécurisé pour la couche tickets
         return [
             new PrivateChannel("tickets." . $this->ticket->id),
+            new PrivateChannel('users.' . $this->ticket->requester_id),
             new PrivateChannel("tickets-list"),
         ];
     }

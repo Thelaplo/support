@@ -3,6 +3,7 @@
 namespace App\Livewire\Tickets;
 
 use Illuminate\Contracts\View\View;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Tickets\Models\Ticket;
@@ -47,6 +48,12 @@ class TicketList extends Component
         }
 
         $this->resetPage();
+    }
+
+    #[On('echo-private:tickets.dashboard,.ticket.updated')]
+    public function refreshTickets(): void
+    {
+        // Livewire re-render automatique
     }
 
     public function render(): View
